@@ -10,20 +10,25 @@ for cmd in jq; do
   fi
 done
 
+usage() {
+	echo "usage: $0 --f param1 --test param2 --file /etc/hostname ..."
+	[ -z "$1" ] || exit "$1"
+}
+
 json='{}'
+
+if (("$#" % 2)); then
+    usage 1
+fi
 
 while (( "$#" >= 2 )); do
   if [[ -f "$2" ]]; then
-    #echo "$2 exist"
     file=$(cat "$2" | jq -asR . )
-    #echo "$file"
     json=$(echo "${json}" | jq '. += {"'"${1}"'":'"$file"'}')
   else
-    #echo "coordinate: {lat: $1, lng: $2}"
     json=$(echo "${json}" | jq '. += {"'${1}'":"'${2}'"}')
   fi
   shift 2
 done
 
-#echo "Result"
 echo ${json}
