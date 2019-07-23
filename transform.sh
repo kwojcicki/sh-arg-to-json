@@ -22,7 +22,7 @@ if (("$#" % 2)); then
 fi
 
 while (( "$#" >= 2 )); do
-  if [[ -f "$2" ]]; then
+  if [ -f "$2" ] && [[ "${1}" != *"@notfile" ]]; then
     file=$(cat "$2" | jq -asR . )
     json=$(echo "${json}" | jq '. += {"'"${1}"'":'"$file"'}')
   else
